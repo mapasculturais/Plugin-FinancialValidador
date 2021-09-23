@@ -41,7 +41,7 @@ class Plugin extends \AbstractValidator\AbstractValidator
 
 
         //botao de export csv
-        $app->hook('template(opportunity.single.header-inscritos):end', function () use($plugin, $app){
+        $app->hook('template(opportunity.<<single|edit>>.sidebar-right):end', function () use($plugin, $app){
             
             $opportunity = $this->controller->requestedEntity; //Tive que chamar o controller para poder requisitar a entity
             $isOpportunityManager = $plugin->config['is_opportunity_managed_handler'];
@@ -49,22 +49,22 @@ class Plugin extends \AbstractValidator\AbstractValidator
             if ($opportunity->id == $isOpportunityManager($opportunity) && $opportunity->canUser('@control')) {
 
                 /** @var \MapasCulturais\Theme $this */
-                $this->part('financial-validador/csv-button', ['opportunity' => $opportunity->id, 'plugin' => $plugin]);
+                $this->part('financial-validador/validador-uploads', ['entity' => $opportunity, 'plugin' => $plugin]);
             }
         });
 
         // uploads de CSVs 
-        $app->hook('template(opportunity.<<single|edit>>.sidebar-right):end', function () use($plugin) {
+        // $app->hook('template(opportunity.<<single|edit>>.sidebar-right):end', function () use($plugin) {
             
-            $opportunity = $this->controller->requestedEntity; 
-            $isOpportunityManager = $plugin->config['is_opportunity_managed_handler'];
+        //     $opportunity = $this->controller->requestedEntity; 
+        //     $isOpportunityManager = $plugin->config['is_opportunity_managed_handler'];
 
-            if ($opportunity->id == $isOpportunityManager($opportunity) && $opportunity->canUser('@control')) {
+        //     if ($opportunity->id == $isOpportunityManager($opportunity) && $opportunity->canUser('@control')) {
 
-                /** @var \MapasCulturais\Theme $this */
-                $this->part('financial-validador/validador-uploads', ['entity' => $opportunity, 'plugin' => $plugin]);
-            }
-        });
+        //         /** @var \MapasCulturais\Theme $this */
+        //         $this->part('financial-validador/validador-uploads', ['entity' => $opportunity, 'plugin' => $plugin]);
+        //     }
+        // });
 
         // atualiza os metadados legados para o novo formato requerido
         if (!$app->repo('DbUpdate')->findBy(['name' => 'update registration_meta financeiro'])) {

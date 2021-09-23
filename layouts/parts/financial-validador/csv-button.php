@@ -22,7 +22,7 @@ $route = MapasCulturais\App::i()->createUrl($slug, 'export');
         <input type="date" name="to" id="financeiro-to">
         # Caso não queira filtrar entre datas, deixe os campos vazios.
 
-        <input type="hidden" name="opportunity" value="<?=$opportunity?>">
+        <input type="hidden" name="opportunity" value="<?=$opportunity->id?>">
 
         <label style="display: block; margin-bottom: 1em;">
             <input type="checkbox" name="only_unprocessed" value="1" checked> Exportar somente as inscrições sem validação financeira 

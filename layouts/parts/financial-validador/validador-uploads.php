@@ -20,7 +20,8 @@ $template = '
     <h3 class="editando">Arquivos do <?= $name ?></h3>
     
     <div>
-        <a class="add js-open-editbox hltip" data-target="#editbox-<?= $slug ?>-file" href="#" title="Clique para adicionar subir novo arquivo de validação do <?= $name ?>"> subir arquivo</a>
+        <?php $this->part('financial-validador/csv-button', ['opportunity' => $entity, 'plugin' => $plugin]); ?>
+        <button class="btn btn-default add js-open-editbox hltip" data-target="#editbox-<?= $slug ?>-file" href="#" title="Clique para adicionar subir novo arquivos do <?= $name ?>">Subir arquivo</button>
     </div>
     <div id="editbox-<?= $slug ?>-file" class="js-editbox mc-left" title="Subir arquivo de validação do <?= $name ?>" data-submit-label="Enviar">
         <?php $this->ajaxUploader($entity, $slug, 'append', "ul.js-validador.{$slug}", $template, '', false, false, false)?>
@@ -29,7 +30,8 @@ $template = '
         <?php if(is_array($files)): foreach($files as $file): ?>
             <li id="file-<?php echo $file->id ?>" class="widget-list-item<?php if($this->isEditable()) echo \MapasCulturais\i::_e(' is-editable'); ?>" >
                 <a href="<?php echo $file->url;?>"><span><?php echo $file->description ? $file->description : $file->name;?></span></a>
-                <?php if($processed_at = $entity->financeiro_processed_files->{$file->name} ?? null): ?>
+                <?php $process = $plugin->prefix("processed_files");?>
+                <?php if($processed_at = $entity->$process->{$file->name} ?? null): ?>
                     - processado em <?= $processed_at ?>
                 <?php else: ?>
                 <div class="botoes">
