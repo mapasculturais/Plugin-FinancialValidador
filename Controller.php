@@ -490,6 +490,12 @@ class Controller extends \MapasCulturais\Controllers\Registration
             }
             
             $registration = $app->repo('Registration')->findOneBy(['number' => $num]);
+
+            if(!$registration){
+                $app->log->debug($num. " Não encontrada");
+                continue;
+            }
+
             $registration->__skipQueuingPCacheRecreation = true;
 
             $raw_data = $registration->{$slug . '_raw'};
