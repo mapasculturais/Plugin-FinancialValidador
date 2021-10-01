@@ -476,15 +476,19 @@ class Controller extends \MapasCulturais\Controllers\Registration
                 
             }
 
-            if ($result == '10' && empty($obs)) {
-                $obs = "Inscrição Aprovada\n------------------";
+            if ($result == '10') {              
+                
                 for ($i = 1; $i <= 12; $i++) {
                     $data = $line["DATA {$i}"] ?? null;
                     $valor = $line["VALOR {$i}"] ?? null;
                     if ($data && $valor) {
                         $data = (new \DateTime($data))->format('d/m/Y');
                         $valor = number_format($valor, 2);
-                        $obs .= "\nR$ $valor a serem pagos em {$data}";
+                        if(empty($obs)){
+                            $obs = "Inscrição Aprovada\n------------------";                                               
+                        }
+                                                
+                        $obs .= "\nR$ $valor a serem pagos em {$data}";    
                     }
                 }
             }
@@ -518,6 +522,7 @@ class Controller extends \MapasCulturais\Controllers\Registration
             $registration->save(true);
     
             $user = $this->plugin->user;
+            
 
             /* @TODO: versão para avaliação documental */
             $evaluation = new RegistrationEvaluation;
