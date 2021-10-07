@@ -33,6 +33,7 @@ class Controller extends \MapasCulturais\Controllers\Registration
         'CPF',
         'VALIDACAO',
         'OBSERVACOES',
+        'STATUS',
         'DATA 1',
         'VALOR 1',
         'DATA 2',
@@ -448,6 +449,8 @@ class Controller extends \MapasCulturais\Controllers\Registration
             $num = $line['NUMERO'];
             $obs = $line['OBSERVACOES'];
             $eval = $line['VALIDACAO'];
+            $column_status = (isset($line['STATUS']) && !empty($line['STATUS'])) ? $line['STATUS'] : null;
+            $status = $this->getStatus($column_status);
 
             switch(strtolower($eval)){
                 case 'aprovado':
@@ -517,7 +520,9 @@ class Controller extends \MapasCulturais\Controllers\Registration
                 continue;
             }
             
-            $app->log->info("$name #{$count} {$registration} $eval");
+            $mess = $column_status ?? $eval;
+
+            $app->log->info("$name #{$count} {$registration} $mess");
 
             $raw_data[] = $line;
             $filesnames[] = $filename;
@@ -552,6 +557,7 @@ class Controller extends \MapasCulturais\Controllers\Registration
                     $payment->registration = $registration;
                     $payment->metadata->csv_line = $line;
                     $payment->metadata->csv_filename = $filename;
+                    $payment->status = $status;
 
                     $payment->save(true);
                 }
@@ -578,7 +584,58 @@ class Controller extends \MapasCulturais\Controllers\Registration
 
     }
 
-    public function import_inciso2() {
+    public function getStatus($value) {
+        switch ($value) {
+            case 'pago':
+            case 'Pago':
+            case 'PAGO':
+            case 'paga':
+            case 'Paga':
+            case 'PAGA':
+                $status = Payment::STATUS_PAID;
+            break;
+
+            case 'pendente':
+            case 'Pendente':
+            case 'PENDENTE':          
+                $status = Payment::STATUS_PENDING;
+            break;
+
+            case 'PROCESSADO':
+            case 'processado':
+            case 'Processado':
+            case 'processada':
+            case 'Processada':
+            case 'PROCESSADA':                     
+                $status = Payment::STATUS_PROCESSING;
+            break;
+
+            case 'falha':
+            case 'Falha':
+                $status = Payment::STATUS_FAILED;
+            break;
+            
+            case 'EXPORTADO':
+            case 'EXPORTADA':
+            case 'exportado':
+            case 'Exportada':          
+                $status = Payment::STATUS_EXPORTED;
+            break;
+
+            case 'DISPONIVEL':
+            case 'Disponivel':
+            case 'DISPONÍVEL':
+            case 'Disponível':
+            case 'disponível':
+            case 'disponível':          
+                $status = Payment::STATUS_AVAILABLE;
+            break;
+            
+            default:
+                $status = Payment::STATUS_PROCESSING;
+                break;
+        }
         
+        return $status;
     }
 }
