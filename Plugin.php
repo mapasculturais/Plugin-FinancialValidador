@@ -70,19 +70,6 @@ class Plugin extends \AbstractValidator\AbstractValidator
             }
         });
 
-        // uploads de CSVs 
-        // $app->hook('template(opportunity.<<single|edit>>.sidebar-right):end', function () use($plugin) {
-            
-        //     $opportunity = $this->controller->requestedEntity; 
-        //     $isOpportunityManager = $plugin->config['is_opportunity_managed_handler'];
-
-        //     if ($opportunity->id == $isOpportunityManager($opportunity) && $opportunity->canUser('@control')) {
-
-        //         /** @var \MapasCulturais\Theme $this */
-        //         $this->part('financial-validador/validador-uploads', ['entity' => $opportunity, 'plugin' => $plugin]);
-        //     }
-        // });
-
         // atualiza os metadados legados para o novo formato requerido
         if (!$app->repo('DbUpdate')->findBy(['name' => 'update registration_meta financeiro'])) {
             $conn = $app->em->getConnection();
