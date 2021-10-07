@@ -20,6 +20,8 @@ class Plugin extends \AbstractValidator\AbstractValidator
 
             //Retorna o nome que sera exibido na interface
             'name' => "",
+            // Campos que devem existir na planilha
+            'fields' => [],
 
             // se true, só exporta as inscrições 
             'exportador_requer_validacao' => [],
