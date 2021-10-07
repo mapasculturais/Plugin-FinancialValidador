@@ -23,7 +23,24 @@ class Plugin extends \AbstractValidator\AbstractValidator
 
             // se true, só exporta as inscrições 
             'exportador_requer_validacao' => [],
-            
+
+            // Trata os campos que aparecem na exportação
+            'fields_tratament' => function ($registration, $field) {
+                $result = [
+                    'CPF' => function () use ($registration, $field) {
+                        $field = $this->prefixFieldId($field);
+                        return preg_replace('/[^0-9]/i', '', $registration->$field);
+                    },
+                    'NOME_COMPLETO' => function () use ($registration, $field) {
+                        $field = $this->prefixFieldId($field);
+                        return $registration->$field;
+                    },
+                ];
+
+                $callable = $result[$field] ?? null;
+
+                return $callable ? $callable() : null;
+            }
         ];
         
         $config['forcar_resultado'] = true;
@@ -200,6 +217,12 @@ class Plugin extends \AbstractValidator\AbstractValidator
     function isRegistrationEligible(Registration $registration): bool
     {
         return true;
+    }
+
+    public function prefixFieldId($value)
+    {
+        $fields_id = $this->config['fields'];
+        return $fields_id[$value] ? "field_".$fields_id[$value] : null;
     }
     
 }

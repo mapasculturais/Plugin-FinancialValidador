@@ -29,6 +29,8 @@ class Controller extends \MapasCulturais\Controllers\Registration
 
     protected $columns = [
         'NUMERO',
+        'NOME_COMPLETO',
+        'CPF',
         'VALIDACAO',
         'OBSERVACOES',
         'DATA 1',
@@ -239,10 +241,14 @@ class Controller extends \MapasCulturais\Controllers\Registration
         $csv_data = [];
 
 
-        foreach ($registrations as $i => $registration) {   
-                        
+        $tratament = $this->config['fields_tratament']; 
+
+        foreach ($registrations as $i => $registration) {  
+           
             $csv_data[$i] = [
                 'NUMERO' => $registration->number,
+                'NOME_COMPLETO' => $tratament($registration, 'NOME_COMPLETO'),
+                'CPF' => $tratament($registration, 'CPF'),
                 'VALIDACAO' => null,
                 'OBSERVACOES' => null,
                 'DATA 1' => null,
