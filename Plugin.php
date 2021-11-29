@@ -5,6 +5,8 @@ namespace FinancialValidador;
 use MapasCulturais\App;
 use MapasCulturais\Entities\Registration;
 
+require_once __DIR__ . "/../AbstractValidator/AbstractValidator.php";
+
 class Plugin extends \AbstractValidator\AbstractValidator
 {
     protected static $instanceBySlug = null;
@@ -28,12 +30,14 @@ class Plugin extends \AbstractValidator\AbstractValidator
 
             // Trata os campos que aparecem na exportação
             'fields_tratament' => function ($registration, $field) {
-                $result = [
+                if(!$this->config['fields']){return;}
+                $result = [                   
                     'CPF' => function () use ($registration, $field) {
+                       
                         $field = $this->prefixFieldId($field);
                         return preg_replace('/[^0-9]/i', '', $registration->$field);
                     },
-                    'NOME_COMPLETO' => function () use ($registration, $field) {
+                    'NOME_COMPLETO' => function () use ($registration, $field) {                        
                         $field = $this->prefixFieldId($field);
                         return $registration->$field;
                     },

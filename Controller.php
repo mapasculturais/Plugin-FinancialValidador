@@ -2,6 +2,7 @@
 
 namespace FinancialValidador;
 
+
 use DateTime;
 use Exception;
 use League\Csv\Reader;
@@ -294,6 +295,28 @@ class Controller extends \MapasCulturais\Controllers\Registration
 
         $csv = Writer::createFromStream($stream);
         $csv->setDelimiter(";");
+
+        // Caso não exista Fields configurados remove os campos de nome e CPF
+        if(!$this->config['fields']){
+
+            $map_headers = [];
+            foreach($headers as $value){
+                if(!in_array($value, ['NOME_COMPLETO', 'CPF'])){
+                    $map_headers[] = $value;
+                }
+            }
+          
+            $map_csv_data = array_map(function($row){                
+             unset($row['NOME_COMPLETO']);
+             unset($row['CPF']);
+             return $row;
+               
+            }, $csv_data);
+
+            $csv_data = $map_csv_data;
+            $headers = $map_headers;
+
+        }
 
         $csv->insertOne($headers);
 
