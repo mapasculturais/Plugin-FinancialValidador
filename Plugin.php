@@ -135,7 +135,7 @@ class Plugin extends \AbstractValidator\AbstractValidator
             'default_value' => '[]'
         ]);
 
-        $file_group_definition = new \MapasCulturais\Definitions\FileGroup($slug, ['^text/csv$'], 'O arquivo enviado não é um csv.',false,null,true);
+        $file_group_definition = new \MapasCulturais\Definitions\FileGroup($slug, ['^text/csv$', 'aplication/vnd.ms-excel'], 'O arquivo enviado não é um csv.',false,null,true);
         $app->registerFileGroup('opportunity', $file_group_definition);
 
         parent::register();
