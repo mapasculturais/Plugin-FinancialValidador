@@ -525,7 +525,7 @@ class Controller extends \MapasCulturais\Controllers\Registration
                 }
             }
             
-            $registration = $app->repo('Registration')->findOneBy(['number' => $num, 'opportunity' => $opportunity]);
+            $registration = $app->repo('Registration')->findOneBy(['number' => trim($num), 'opportunity' => $opportunity]);
 
             if(!$registration){
                 $app->log->debug($num. " Não encontrada");
